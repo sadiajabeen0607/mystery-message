@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardDescription,
@@ -22,17 +22,23 @@ import { Message } from "@/model/User";
 import axios from "axios";
 import { toast } from "sonner";
 
-type MessageCardProps = {
-  message: Message;
-  onMessageDelete: (messageId: string) => void;
-};
 
-const MessageCard = ({ message, onMessageDelete }: MessageCardProps) => {
+
+const MessageCard = ({ message, onMessageDelete }) => {
+  const [loading, setLoading] = useState(false); // For handling loading state
+
   const handleDeleteConfirm = async () => {
-    await axios.delete(`/api/delete-message/${message._id}`);
+    try {
+      setLoading(true); // Start loading
+      await axios.delete(`/api/delete-message/${message._id}`);
 
-    toast.success("Message deleted Successfully");
-    onMessageDelete(message._id);
+      toast.success("Message deleted successfully"); // Success message
+      onMessageDelete(message._id); // Optimistic UI update
+    } catch (error) {
+      toast.error("Error deleting message"); // Error message
+    } finally {
+      setLoading(false); // Stop loading
+    }
   };
 
   return (
@@ -58,7 +64,7 @@ const MessageCard = ({ message, onMessageDelete }: MessageCardProps) => {
         {/* ✅ Delete Button (X) on Right */}
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button variant="destructive" size="icon">
+            <Button variant="destructive" size="icon" disabled={loading}>
               <X className="w-4 h-4" />
             </Button>
           </AlertDialogTrigger>
@@ -72,8 +78,8 @@ const MessageCard = ({ message, onMessageDelete }: MessageCardProps) => {
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={handleDeleteConfirm}>
-                Delete
+              <AlertDialogAction onClick={handleDeleteConfirm} disabled={loading}>
+                {loading ? "Deleting..." : "Delete"}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
