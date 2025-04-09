@@ -18,7 +18,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
-import { Message } from "@/model/User";
 import axios from "axios";
 import { toast } from "sonner";
 
@@ -34,8 +33,9 @@ const MessageCard = ({ message, onMessageDelete }) => {
 
       toast.success("Message deleted successfully"); // Success message
       onMessageDelete(message._id); // Optimistic UI update
-    } catch (error) {
+    } catch (err) {
       toast.error("Error deleting message"); // Error message
+      console.error("Error deleting message:", err);
     } finally {
       setLoading(false); // Stop loading
     }
