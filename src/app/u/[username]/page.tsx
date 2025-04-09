@@ -8,13 +8,6 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { boolean } from "zod";
-
-const messages = [
-  { content: "Hello World" },
-  { content: "This is Amazing" },
-  { content: "Such a great news" },
-];
 
 const UserProfile = () => {
   const params = useParams();
@@ -85,13 +78,10 @@ const UserProfile = () => {
       // console.log("result", result);
       toast.success(result.message);
       setValue("content", "");
-    } catch (error: any) {
+    } catch (error) {
       console.log(error);
-
-      // Extract backend error message properly
-      const errorMessage = error.response?.data?.message;
-
-      toast.error(errorMessage);
+      return { success: false, message: "Failed to send message"}
+     
     }
   };
 

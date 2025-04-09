@@ -3,6 +3,11 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import dbConnect from "@/lib/dbConnect";
 import UserModel from "@/model/User";
+import { signInSchema } from "@/schemas/signInSchema";
+import { z } from "zod";
+
+// Ensure you define the correct type for credentials
+type Credentials = z.infer<typeof signInSchema>;
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -13,14 +18,16 @@ export const authOptions: NextAuthOptions = {
         email: { label: "Email", type: "text", placeholder: "jsmith" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials): Promise {
+      async authorize(credentials: Credentials | undefined): Promise<User | null> {
         await dbConnect();
 
+        // Validate the credentials (you can use Zod to parse/validate)
         if (!credentials || !credentials.identifier || !credentials.password) {
           throw new Error("Missing Credentials");
         }
 
         try {
+          // Find the user based on either email or username
           const user = await UserModel.findOne({
             $or: [{ email: credentials.identifier }, { username: credentials.identifier }],
           });
@@ -28,18 +35,22 @@ export const authOptions: NextAuthOptions = {
           if (!user) {
             throw new Error("No user found with this email/username");
           }
+
           if (!user.isVerified) {
             throw new Error("Please verify your account");
           }
 
           const isPasswordMatch = await bcrypt.compare(credentials.password, user.password);
+
           if (isPasswordMatch) {
             return user;
           } else {
             throw new Error("Invalid credentials");
           }
-        } catch (err: any) {
-          throw new Error(err.message);
+        } catch (err) {
+          console.log(err);
+          
+          throw new Error("Some Thing went wrong");
         }
       },
     }),
