@@ -73,13 +73,13 @@ const UserProfile = () => {
         username,
         content: data.content,
       });
-  
+
       toast.success(response.data.message);
       setValue("content", "");
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         const status = error.response?.status;
-    
+
         if (status === 403) {
           toast.error("User is not accepting messages at the moment.");
         } else {
@@ -91,9 +91,6 @@ const UserProfile = () => {
       }
     }
   };
-  
-  
-  
 
   const handleSuggestedMessage = (content: string) => {
     setValue("content", content);
@@ -141,9 +138,15 @@ const UserProfile = () => {
           <div className="flex flex-col space-y-4 my-4">
             {loading ? (
               <>
-                <div className="h-10 bg-gray-200 animate-pulse rounded flex items-center justify-center"><Loader2 /></div>
-                <div className="h-10 bg-gray-200 animate-pulse rounded flex items-center justify-center"><Loader2 /></div>
-                <div className="h-10 bg-gray-200 animate-pulse rounded flex items-center justify-center"><Loader2 /></div>
+                <div className="h-10 bg-gray-200 animate-pulse rounded flex items-center justify-center">
+                  <Loader2 />
+                </div>
+                <div className="h-10 bg-gray-200 animate-pulse rounded flex items-center justify-center">
+                  <Loader2 />
+                </div>
+                <div className="h-10 bg-gray-200 animate-pulse rounded flex items-center justify-center">
+                  <Loader2 />
+                </div>
               </>
             ) : (
               suggestedMessages.map((message, index) => (
