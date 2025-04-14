@@ -20,31 +20,39 @@ import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import axios from "axios";
 import { toast } from "sonner";
+import { MessageInput } from "@/schemas/messageSchema";
 
+// Extend your Zod schema type to include database fields
+type Message = MessageInput & {
+  _id: string;
+  createdAt: string;
+};
 
+type MessageCardProps = {
+  message: Message;
+  onMessageDelete: (id: string) => void;
+};
 
-const MessageCard = ({ message, onMessageDelete }) => {
-  const [loading, setLoading] = useState(false); // For handling loading state
+const MessageCard: React.FC<MessageCardProps> = ({ message, onMessageDelete }) => {
+  const [loading, setLoading] = useState(false);
 
   const handleDeleteConfirm = async () => {
     try {
-      setLoading(true); // Start loading
+      setLoading(true);
       await axios.delete(`/api/delete-message/${message._id}`);
-
-      toast.success("Message deleted successfully"); // Success message
-      onMessageDelete(message._id); // Optimistic UI update
+      toast.success("Message deleted successfully");
+      onMessageDelete(message._id);
     } catch (err) {
-      toast.error("Error deleting message"); // Error message
+      toast.error("Error deleting message");
       console.error("Error deleting message:", err);
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
     }
   };
 
   return (
     <Card className="p-4">
       <CardHeader className="flex flex-row justify-between items-start">
-        {/* ✅ Content on Left */}
         <div>
           <CardTitle className="text-2xl font-semibold">
             {message.content}
@@ -61,10 +69,9 @@ const MessageCard = ({ message, onMessageDelete }) => {
           </CardDescription>
         </div>
 
-        {/* ✅ Delete Button (X) on Right */}
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button variant="destructive" size="icon" disabled={loading}>
+            <Button variant="destructive" size="icon" disabled={loading} className="p-5">
               <X className="w-4 h-4" />
             </Button>
           </AlertDialogTrigger>

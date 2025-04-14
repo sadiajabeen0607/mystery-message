@@ -29,9 +29,11 @@ const SignIn = () => {
     setIsSubmitting(true);
     const result = await signIn('credentials', {
       redirect: false,
-      identifier: data.identifier,
+      email: data.identifier,
       password: data.password
     });
+    console.log("Result", result);
+    
     if(result?.error) {
       toast.error('Invalid credentials');
       setIsSubmitting(false);

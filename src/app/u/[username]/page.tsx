@@ -73,17 +73,31 @@ const UserProfile = () => {
         username,
         content: data.content,
       });
-
-      const result = await response.data;
-      // console.log("result", result);
-      toast.success(result.message);
+  
+      toast.success(response.data.message);
       setValue("content", "");
-    } catch (error) {
-      console.log(error);
-      return { success: false, message: "Failed to send message"}
-     
+    } catch (error: any) {
+      // Suppress Next.js red box by safely catching all Axios errors
+      if (axios.isAxiosError(error)) {
+        const status = error.response?.status;
+  
+        if (status === 403) {
+          toast.error("User is not accepting messages at the moment.");
+        } else {
+          toast.error(error.response?.data?.message || "Something went wrong.");
+        }
+  
+        // ✅ Prevent red error box in dev
+        // console.error("Handled Axios error:", error.message);
+      } else {
+        toast.error("Unexpected error while sending message.");
+        console.error("Unhandled error:", error);
+      }
     }
   };
+  
+  
+  
 
   const handleSuggestedMessage = (content: string) => {
     setValue("content", content);
