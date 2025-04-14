@@ -4,12 +4,16 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '../../auth/[...nextauth]/options';
 import UserModel from '@/model/User';
 import { User } from 'next-auth';
+// import type { NextApiRequest } from 'next';
 
-export async function DELETE(
-  request: NextRequest,
-  context: { params: { messageid: string } }
-) {
-  const { messageid } = context.params;
+interface Context {
+  params: {
+    messageid: string;
+  };
+}
+
+export async function DELETE(request: NextRequest, { params }: Context) {
+  const { messageid } = params;
 
   if (!messageid) {
     return NextResponse.json(

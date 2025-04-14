@@ -15,7 +15,7 @@ const UserProfile = () => {
   const [suggestedMessages, setSuggestedMessages] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
 
-  console.log("suggested Messages", suggestedMessages);
+  // console.log("suggested Messages", suggestedMessages);
 
   //  React Hook Form setup
   const {
