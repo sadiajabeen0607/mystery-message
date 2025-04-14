@@ -76,19 +76,15 @@ const UserProfile = () => {
   
       toast.success(response.data.message);
       setValue("content", "");
-    } catch (error: any) {
-      // Suppress Next.js red box by safely catching all Axios errors
+    } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         const status = error.response?.status;
-  
+    
         if (status === 403) {
           toast.error("User is not accepting messages at the moment.");
         } else {
           toast.error(error.response?.data?.message || "Something went wrong.");
         }
-  
-        // ✅ Prevent red error box in dev
-        // console.error("Handled Axios error:", error.message);
       } else {
         toast.error("Unexpected error while sending message.");
         console.error("Unhandled error:", error);
