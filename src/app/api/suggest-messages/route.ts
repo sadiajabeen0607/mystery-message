@@ -1,7 +1,7 @@
 // app/api/suggest-messages/route.ts
 export async function POST() {
   const localMessages = [
-    "You're stronger than you think 💪",
+   "You're stronger than you think 💪",
     "Hope you're having a great day!",
     "Don't forget to smile 😊",
     "Keep pushing forward 🚀",
@@ -11,6 +11,20 @@ export async function POST() {
     "Every day is a fresh start 🌱",
     "Believe in yourself ✨",
     "Progress, not perfection!",
+    "Shine bright like the star you are 🌟",
+    "Mistakes are proof you’re trying.",
+    "Be kind to yourself 💛",
+    "One step at a time 👣",
+    "Good things take time ⏳",
+    "You’re not alone 🤝",
+    "Celebrate small wins 🎉",
+    "Keep your head up 🌤",
+    "Your potential is endless ✨",
+    "Today is your day!",
+    "Push past the limits 🚧",
+    "Courage is in you 🦁",
+    "Hustle in silence, shine loud 🔥",
+    "Dream big, work hard 💼💭"
   ];
 
   const shuffle = (arr: string[]) => arr.sort(() => 0.5 - Math.random());
