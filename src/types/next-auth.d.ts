@@ -1,24 +1,25 @@
-import "next-auth";
 import { DefaultSession } from "next-auth";
 
 declare module "next-auth" {
   interface User {
     _id: string;
-    isVerified: boolean;
-    isAcceptingMessage: boolean; // ✅ Ensure it matches the database field
     username: string;
+    email: string;
+    isVerified: boolean;
+    isAcceptingMessage: boolean;
   }
 
   interface Session {
-    user: User & DefaultSession["user"]; // ✅ Ensures consistency
+    user: User & DefaultSession["user"];
   }
 }
 
 declare module "next-auth/jwt" {
   interface JWT {
     _id: string;
-    isVerified: boolean;
-    isAcceptingMessage: boolean; // ✅ Matches User interface
     username: string;
+    email: string;
+    isVerified: boolean;
+    isAcceptingMessage: boolean;
   }
 }

@@ -5,25 +5,11 @@ import { authOptions } from '../../auth/[...nextauth]/options';
 import UserModel from '@/model/User';
 import { User } from 'next-auth';
 
-
-interface ContextType {
-  params: {
-    messageid: string;
-  };
-}
-// DO NOT destructure directly in the parameter list
 export async function DELETE(
   request: NextRequest,
-  context: ContextType // ✅ Use 'any' to avoid build issues — safest for deployment
+  { params }: { params: Promise<{ messageid: string }> }
 ) {
-  const messageid = context?.params?.messageid;
-
-  if (!messageid) {
-    return NextResponse.json(
-      { success: false, message: 'Message ID is required' },
-      { status: 400 }
-    );
-  }
+  const { messageid } = await params;
 
   await dbConnect();
 
@@ -55,7 +41,7 @@ export async function DELETE(
       { status: 200 }
     );
   } catch (error) {
-    console.error('Error in delete message route:', error);
+    console.error('Error in delete message route', error);
     return NextResponse.json(
       { success: false, message: 'Error deleting message' },
       { status: 500 }

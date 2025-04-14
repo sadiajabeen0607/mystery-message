@@ -25,7 +25,7 @@ import { MessageInput } from "@/schemas/messageSchema";
 // Extend your Zod schema type to include database fields
 type Message = MessageInput & {
   _id: string;
-  createdAt: string;
+  createdAt: Date | string;
 };
 
 type MessageCardProps = {
