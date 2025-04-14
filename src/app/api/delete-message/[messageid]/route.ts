@@ -1,23 +1,29 @@
-import { NextResponse } from 'next/server';  // Use NextResponse for API response in newer versions of Next.js
-import dbConnect from "@/lib/dbConnect";
-import { getServerSession, User } from "next-auth";
-import { authOptions } from "../../auth/[...nextauth]/options";
-import UserModel from "@/model/User";
+import { NextResponse } from 'next/server';
+import dbConnect from '@/lib/dbConnect';
+import { getServerSession, User } from 'next-auth';
+import { authOptions } from '../../auth/[...nextauth]/options';
+import UserModel from '@/model/User';
+import type { NextRequest } from 'next/server';
 
-export async function DELETE(request: Request, { params }: { params: { messageid: string } }) {
-  // Await the params
-  const { messageid } = await params; // This line is important to await the dynamic parameters
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { messageid: string } }
+) {
+  const { messageid } = params;
 
   await dbConnect();
 
   const session = await getServerSession(authOptions);
-  const user: User = session?.user as User;
+  const user = session?.user as User;
 
-  if (!session || !session?.user) {
-    return NextResponse.json({
-      success: false,
-      message: "Not authenticated"
-    }, { status: 401 });
+  if (!session || !session.user) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: 'Not authenticated',
+      },
+      { status: 401 }
+    );
   }
 
   try {
@@ -27,22 +33,30 @@ export async function DELETE(request: Request, { params }: { params: { messageid
     );
 
     if (updatedResult.modifiedCount === 0) {
-      return NextResponse.json({
-        success: false,
-        message: "Message not found or already deleted"
-      }, { status: 404 });
+      return NextResponse.json(
+        {
+          success: false,
+          message: 'Message not found or already deleted',
+        },
+        { status: 404 }
+      );
     }
 
-    return NextResponse.json({
-      success: true,
-      message: "Message deleted successfully"
-    }, { status: 200 });
-
+    return NextResponse.json(
+      {
+        success: true,
+        message: 'Message deleted successfully',
+      },
+      { status: 200 }
+    );
   } catch (error) {
-    console.log("Error in delete message route", error);
-    return NextResponse.json({
-      success: false,
-      message: "Error deleting message"
-    }, { status: 500 });
+    console.error('Error in delete message route', error);
+    return NextResponse.json(
+      {
+        success: false,
+        message: 'Error deleting message',
+      },
+      { status: 500 }
+    );
   }
 }

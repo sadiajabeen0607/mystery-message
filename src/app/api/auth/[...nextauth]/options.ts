@@ -4,10 +4,6 @@ import bcrypt from "bcryptjs";
 import dbConnect from "@/lib/dbConnect";
 import UserModel from "@/model/User";
 import { signInSchema } from "@/schemas/signInSchema";
-import { z } from "zod";
-
-// Ensure you define the correct type for credentials
-type Credentials = z.infer<typeof signInSchema>;
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -15,21 +11,23 @@ export const authOptions: NextAuthOptions = {
       id: "credentials",
       name: "Credentials",
       credentials: {
-        email: { label: "Email", type: "text", placeholder: "jsmith" },
+        email: { label: "Email or Username", type: "text", placeholder: "jsmith" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials: Credentials | undefined): Promise<User | null> {
+      async authorize(credentials) {
         await dbConnect();
 
-        // Validate the credentials (you can use Zod to parse/validate)
-        if (!credentials || !credentials.identifier || !credentials.password) {
-          throw new Error("Missing Credentials");
+        if (!credentials || !credentials.email || !credentials.password) {
+          throw new Error("Missing credentials");
         }
 
+        const { email, password } = credentials;
+
         try {
-          // Find the user based on either email or username
+          signInSchema.parse({ identifier: email, password });
+
           const user = await UserModel.findOne({
-            $or: [{ email: credentials.identifier }, { username: credentials.identifier }],
+            $or: [{ email }, { username: email }],
           });
 
           if (!user) {
@@ -40,7 +38,7 @@ export const authOptions: NextAuthOptions = {
             throw new Error("Please verify your account");
           }
 
-          const isPasswordMatch = await bcrypt.compare(credentials.password, user.password);
+          const isPasswordMatch = await bcrypt.compare(password, user.password);
 
           if (isPasswordMatch) {
             return user;
@@ -48,9 +46,8 @@ export const authOptions: NextAuthOptions = {
             throw new Error("Invalid credentials");
           }
         } catch (err) {
-          console.log(err);
-          
-          throw new Error("Some Thing went wrong");
+          console.error("Authorize error:", err);
+          throw new Error("Something went wrong");
         }
       },
     }),
@@ -82,5 +79,5 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
-  secret: process.env.NEXTAUTH_SECRET, // ✅ Make sure .env file has NEXTAUTH_SECRET
+  secret: process.env.NEXTAUTH_SECRET,
 };
