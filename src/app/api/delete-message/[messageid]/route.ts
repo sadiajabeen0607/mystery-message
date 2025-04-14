@@ -5,11 +5,18 @@ import { authOptions } from '../../auth/[...nextauth]/options';
 import UserModel from '@/model/User';
 import { User } from 'next-auth';
 
+
+interface ContextType {
+  params: {
+    messageid: string;
+  };
+}
+// DO NOT destructure directly in the parameter list
 export async function DELETE(
   request: NextRequest,
-  context: { params: { messageid: string } } // ✅ Vercel-compatible shape
+  context: ContextType // ✅ Use 'any' to avoid build issues — safest for deployment
 ) {
-  const messageid = context.params.messageid;
+  const messageid = context?.params?.messageid;
 
   if (!messageid) {
     return NextResponse.json(
