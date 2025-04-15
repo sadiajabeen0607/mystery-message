@@ -56,7 +56,7 @@ const SignIn = () => {
   };
 
   return (
-    <div className="flex items-center justify-center bg-neutral-100 min-h-screen">
+    <div className="flex items-center justify-center bg-neutral-100 min-h-screen p-5">
       <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
         <div className="text-center">
           <h1 className="text-4xl lg:text-5xl font-extrabold tracking-tight mb-6">Join Mystery Message</h1>

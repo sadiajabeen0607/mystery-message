@@ -12,18 +12,18 @@ const Navbar = () => {
   
   return (
     <nav className='p-4 md:p-6 shadow-md'>
-      <div className='container mx-auto flex flex-col md:flex-row items-center justify-between'>
-        <Link className='text-xl mb-4 md:mb-0 font-bold' href="/">Mystery Message</Link>
+      <div className='container mx-auto flex flex-row items-center justify-between'>
+        <Link className='text-xl md:mb-0 font-bold' href="/">Mystery Message</Link>
 
         {
           session ? (
             <>
-              <span className='mr-4 mb-2 md:mb-0'>Welcome, {user?.username || user?.email}</span>
-              <Button className='w-full md:w-auto' onClick={() => signOut()}>Logout</Button>
+              <p className='mr-2'>Welcome, <span className=' pl-1 font-bold'> {user?.username || user?.email}</span></p>
+              <Button className='w-auto sm:w-24 md:w-auto' onClick={() => signOut()}>Logout</Button>
             </>
           ) : (
             <Link href="/signIn">
-              <Button className='w-full md:w-auto'>Login</Button>
+              <Button className=''>Login</Button>
             </Link>
           )
         }

@@ -43,7 +43,7 @@ const Home = () => {
                       {/* Mail Icon on the left */}
                       <Mail className="w-5 h-5 mr-2 flex-shrink-0" />
                       <div className="flex flex-col mt-2">
-                        <span className="text-lg text-center font-medium">
+                        <span className="w-full text-lg font-medium">
                           {message.content}
                         </span>
                         <span className="text-xs text-gray-500 -mt-0.5">
