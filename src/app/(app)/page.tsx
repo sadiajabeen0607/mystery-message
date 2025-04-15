@@ -18,7 +18,7 @@ import { Mail } from "lucide-react";
 const Home = () => {
   return (
     <>
-      <main className="flex flex-grow flex-col items-center justify-center px-4 md:px-24 py-12">
+      <main className="flex flex-grow flex-col items-center justify-center px-4 md:px-24 py-12 w-full">
         <section className="text-center my-10 mb-8 md:mb-12">
           <h1 className="text-3xl md:text-5xl font-bold">
             Dive into the World of Anonymous Conversations
